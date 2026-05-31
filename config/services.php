@@ -40,4 +40,8 @@ return [
         'public_key'   => env('MP_PUBLIC_KEY'),
     ],
 
+    'store' => [
+        'admin_email' => env('STORE_ADMIN_EMAIL', 'admin@feria.com'),
+    ],
+
 ];

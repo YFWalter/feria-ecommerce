@@ -27,6 +27,14 @@ Route::get('/checkout/pendiente', [CheckoutController::class, 'pending'])->name(
 Route::get('/checkout/fallo', [CheckoutController::class, 'failure'])->name('checkout.failure');
 Route::get('/pedido/{number}', [CheckoutController::class, 'success'])->name('checkout.success');
 
+// ── Redirección post-login (Breeze apunta a route('dashboard')) ──
+// Admin → panel; cliente → home.
+Route::get('/dashboard', function () {
+    return auth()->user()?->isAdmin()
+        ? redirect()->route('admin.dashboard')
+        : redirect()->route('home');
+})->middleware('auth')->name('dashboard');
+
 // ── Panel de administración ─────────────────────────────────
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewOrderMail;
+use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\MercadoPagoConfig;
 
@@ -51,33 +55,52 @@ class CheckoutController extends Controller
         $shipping = self::SHIPPING_COST;
         $total    = $subtotal + $shipping;
 
-        $order = DB::transaction(function () use ($cart, $data, $subtotal, $shipping, $total) {
-            $order = Order::create([
-                'number'           => Order::generateNumber(),
-                'status'           => 'pending',
-                'payment_status'   => 'pending',
-                'subtotal'         => $subtotal,
-                'shipping'         => $shipping,
-                'total'            => $total,
-                'customer_name'    => $data['customer_name'],
-                'customer_email'   => $data['customer_email'],
-                'customer_phone'   => $data['customer_phone'] ?? null,
-                'shipping_address' => $data['shipping_address'],
-                'notes'            => $data['notes'] ?? null,
-            ]);
+        try {
+            $order = DB::transaction(function () use ($cart, $data, $subtotal, $shipping, $total) {
+                // Bloqueamos y verificamos el stock de cada producto antes de confirmar.
+                foreach ($cart as $item) {
+                    $product = Product::lockForUpdate()->find($item['product_id']);
 
-            foreach ($cart as $item) {
-                $order->items()->create([
-                    'product_id'   => $item['product_id'],
-                    'product_name' => $item['name'],
-                    'price'        => $item['price'],
-                    'quantity'     => $item['quantity'],
-                    'subtotal'     => $item['price'] * $item['quantity'],
+                    if (! $product || ! $product->is_active) {
+                        throw new \RuntimeException("El producto \"{$item['name']}\" ya no está disponible.");
+                    }
+                    if ($product->stock < $item['quantity']) {
+                        throw new \RuntimeException("Stock insuficiente de \"{$item['name']}\" (quedan {$product->stock}).");
+                    }
+                }
+
+                $order = Order::create([
+                    'number'           => Order::generateNumber(),
+                    'status'           => 'pending',
+                    'payment_status'   => 'pending',
+                    'subtotal'         => $subtotal,
+                    'shipping'         => $shipping,
+                    'total'            => $total,
+                    'customer_name'    => $data['customer_name'],
+                    'customer_email'   => $data['customer_email'],
+                    'customer_phone'   => $data['customer_phone'] ?? null,
+                    'shipping_address' => $data['shipping_address'],
+                    'notes'            => $data['notes'] ?? null,
                 ]);
-            }
 
-            return $order;
-        });
+                foreach ($cart as $item) {
+                    $order->items()->create([
+                        'product_id'   => $item['product_id'],
+                        'product_name' => $item['name'],
+                        'price'        => $item['price'],
+                        'quantity'     => $item['quantity'],
+                        'subtotal'     => $item['price'] * $item['quantity'],
+                    ]);
+
+                    // Descontamos el stock vendido.
+                    Product::whereKey($item['product_id'])->decrement('stock', $item['quantity']);
+                }
+
+                return $order;
+            });
+        } catch (\RuntimeException $e) {
+            return redirect()->route('cart.index')->with('error', $e->getMessage());
+        }
 
         // Si MercadoPago está configurado, redirigimos a la pasarela de pago.
         if (config('services.mercadopago.access_token')) {
@@ -91,6 +114,7 @@ class CheckoutController extends Controller
 
         // Sin MercadoPago (o si falló): confirmamos el pedido con pago pendiente.
         session()->forget('cart');
+        $this->sendOrderEmails($order);
 
         return redirect()->route('checkout.success', $order->number);
     }
@@ -132,6 +156,25 @@ class CheckoutController extends Controller
             : null;
 
         return view('checkout.failure', compact('order'));
+    }
+
+    /**
+     * Envía el email de confirmación al cliente y la notificación al admin.
+     * No interrumpe el flujo si falla el envío (queda registrado en el log).
+     */
+    private function sendOrderEmails(Order $order): void
+    {
+        $order->loadMissing('items');
+
+        try {
+            Mail::to($order->customer_email)->send(new OrderConfirmationMail($order));
+
+            if ($adminEmail = config('services.store.admin_email')) {
+                Mail::to($adminEmail)->send(new NewOrderMail($order));
+            }
+        } catch (\Throwable $e) {
+            Log::error("Error enviando emails del pedido {$order->number}: " . $e->getMessage());
+        }
     }
 
     private function createMercadoPagoPreference(Order $order): string
