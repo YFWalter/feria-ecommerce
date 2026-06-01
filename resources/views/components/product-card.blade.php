@@ -25,8 +25,8 @@
             </h3>
         </a>
 
-        <div class="mt-3 flex items-center justify-between">
-            <div>
+        <div class="mt-3">
+            <div class="mb-3">
                 <span class="text-lg font-bold text-gray-900">${{ number_format($product->price, 0, ',', '.') }}</span>
                 @if($product->hasDiscount())
                     <span class="ml-2 text-sm text-gray-400 line-through">${{ number_format($product->compare_price, 0, ',', '.') }}</span>
@@ -35,17 +35,27 @@
             </div>
 
             @if($product->stock > 0)
-                <form action="{{ route('cart.add') }}" method="POST">
+                <form action="{{ route('cart.add') }}" method="POST" x-data="{ qty: 1 }" class="flex items-center gap-2">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <input type="hidden" name="quantity" value="1">
+                    <input type="hidden" name="quantity" :value="qty">
+
+                    {{-- Selector de cantidad --}}
+                    <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden flex-shrink-0">
+                        <button type="button" @click="qty = Math.max(1, qty - 1)"
+                                class="px-2 py-1.5 hover:bg-gray-100 text-gray-600 transition-colors text-sm">−</button>
+                        <span class="px-1.5 py-1.5 text-sm font-medium border-x border-gray-300 min-w-[1.75rem] text-center" x-text="qty"></span>
+                        <button type="button" @click="qty = Math.min({{ $product->stock }}, qty + 1)"
+                                class="px-2 py-1.5 hover:bg-gray-100 text-gray-600 transition-colors text-sm">+</button>
+                    </div>
+
                     <button type="submit"
-                            class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
-                        + Agregar
+                            class="flex-1 bg-amber-500 hover:bg-amber-600 text-white text-xs font-medium px-2 py-1.5 rounded-lg transition-colors">
+                        Agregar
                     </button>
                 </form>
             @else
-                <span class="bg-gray-100 text-gray-400 text-xs font-medium px-3 py-1.5 rounded-lg cursor-not-allowed">
+                <span class="block text-center bg-gray-100 text-gray-400 text-xs font-medium px-3 py-1.5 rounded-lg cursor-not-allowed">
                     Sin stock
                 </span>
             @endif
