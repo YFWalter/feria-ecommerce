@@ -54,6 +54,11 @@ class OrderController extends Controller
 
         $order->update($data);
 
+        // Al cancelar un pedido, devolvemos el stock (idempotente).
+        if ($data['status'] === 'cancelled') {
+            $order->restoreStock();
+        }
+
         return back()->with('success', 'Pedido actualizado.');
     }
 }

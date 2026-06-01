@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\MercadoPagoConfig;
 
@@ -81,6 +83,7 @@ class CheckoutController extends Controller
                     'customer_phone'   => $data['customer_phone'] ?? null,
                     'shipping_address' => $data['shipping_address'],
                     'notes'            => $data['notes'] ?? null,
+                    'stock_reduced'    => true,
                 ]);
 
                 foreach ($cart as $item) {
@@ -123,16 +126,10 @@ class CheckoutController extends Controller
     {
         $order = Order::where('number', $number)->firstOrFail();
 
-        // MercadoPago devuelve estos parámetros al volver de la pasarela.
-        if ($request->filled('payment_id')) {
-            $approved = $request->get('status') === 'approved';
-
-            $order->update([
-                'mp_payment_id'  => $request->get('payment_id'),
-                'payment_status' => $approved ? 'paid' : 'pending',
-                'status'         => $approved ? 'processing' : $order->status,
-            ]);
-        }
+        // Confirmamos el pago consultando la API de MP (fuente confiable),
+        // en lugar de confiar en los parámetros de la URL.
+        $this->syncPaymentSafe($request->input('payment_id') ?? $request->input('collection_id'));
+        $order->refresh();
 
         // Confirmado el pedido, vaciamos el carrito.
         session()->forget('cart');
@@ -142,6 +139,8 @@ class CheckoutController extends Controller
 
     public function pending(Request $request)
     {
+        $this->syncPaymentSafe($request->input('payment_id') ?? $request->input('collection_id'));
+
         $order = $request->filled('external_reference')
             ? Order::where('number', $request->get('external_reference'))->first()
             : null;
@@ -151,11 +150,46 @@ class CheckoutController extends Controller
 
     public function failure(Request $request)
     {
+        $this->syncPaymentSafe($request->input('payment_id') ?? $request->input('collection_id'));
+
         $order = $request->filled('external_reference')
             ? Order::where('number', $request->get('external_reference'))->first()
             : null;
 
         return view('checkout.failure', compact('order'));
+    }
+
+    /**
+     * Webhook (IPN) de MercadoPago: notificación servidor-a-servidor.
+     * Es la fuente confiable del estado del pago (los back_urls dependen de que
+     * el cliente vuelva al sitio). Configurar la URL en el panel de MP.
+     */
+    public function webhook(Request $request)
+    {
+        if (! config('services.mercadopago.access_token')) {
+            return response()->json(['status' => 'mp disabled'], 200);
+        }
+
+        // MP manda el id del pago de distintas formas según la versión.
+        $type      = $request->input('type', $request->input('topic'));
+        $paymentId = $request->input('data.id', $request->input('id'));
+
+        if ($type && $type !== 'payment') {
+            return response()->json(['status' => 'ignored'], 200);
+        }
+        if (! $paymentId) {
+            return response()->json(['status' => 'no payment id'], 200);
+        }
+
+        try {
+            $this->syncPaymentById((string) $paymentId);
+        } catch (\Throwable $e) {
+            Log::error('MercadoPago webhook error: ' . $e->getMessage());
+            // 500 → MP reintentará la notificación más tarde.
+            return response()->json(['status' => 'error'], 500);
+        }
+
+        return response()->json(['status' => 'ok'], 200);
     }
 
     /**
@@ -174,6 +208,98 @@ class CheckoutController extends Controller
             }
         } catch (\Throwable $e) {
             Log::error("Error enviando emails del pedido {$order->number}: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Consulta el pago en MP y actualiza el pedido. Versión "segura" para los
+     * back_urls: no lanza excepción (la página igual se muestra).
+     */
+    private function syncPaymentSafe(?string $paymentId): void
+    {
+        if (! $paymentId || ! config('services.mercadopago.access_token')) {
+            return;
+        }
+
+        try {
+            $this->syncPaymentById((string) $paymentId);
+        } catch (\Throwable $e) {
+            Log::error('MercadoPago sync error: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Obtiene el pago desde la API de MP por su id y aplica el estado al pedido
+     * correspondiente (vía external_reference = número de pedido).
+     */
+    private function syncPaymentById(string $paymentId): void
+    {
+        MercadoPagoConfig::setAccessToken(config('services.mercadopago.access_token'));
+
+        $payment = (new PaymentClient())->get($paymentId);
+
+        if (! $payment || empty($payment->external_reference)) {
+            return;
+        }
+
+        $order = Order::where('number', $payment->external_reference)->first();
+
+        if ($order) {
+            $this->applyPaymentStatus($order, $payment->status, (string) $payment->id);
+        }
+    }
+
+    /**
+     * Aplica el estado de pago de MP al pedido, de forma idempotente:
+     * - approved  → paid + processing (envía emails una sola vez)
+     * - rejected/cancelled/refunded/charged_back → failed + cancelled, restaura stock una vez
+     * - pending/in_process → solo guarda el payment_id
+     */
+    private function applyPaymentStatus(Order $order, ?string $mpStatus, ?string $paymentId): void
+    {
+        $justPaid = DB::transaction(function () use ($order, $mpStatus, $paymentId) {
+            // Bloqueamos la fila para evitar carreras entre el webhook y la redirección.
+            $order = Order::lockForUpdate()->find($order->id);
+
+            if (! $order) {
+                return false;
+            }
+
+            if ($paymentId) {
+                $order->mp_payment_id = $paymentId;
+            }
+
+            if ($mpStatus === 'approved') {
+                if ($order->payment_status !== 'paid') {
+                    $order->payment_status = 'paid';
+                    $order->status         = 'processing';
+                    $order->save();
+
+                    return true; // disparar emails fuera de la transacción
+                }
+
+                $order->save();
+
+                return false;
+            }
+
+            if (in_array($mpStatus, ['rejected', 'cancelled', 'refunded', 'charged_back'], true)) {
+                $order->restoreStock(); // idempotente (guardado por stock_reduced)
+                $order->payment_status = 'failed';
+                $order->status         = 'cancelled';
+                $order->save();
+
+                return false;
+            }
+
+            // pending / in_process u otros estados intermedios.
+            $order->save();
+
+            return false;
+        });
+
+        if ($justPaid) {
+            $this->sendOrderEmails($order->fresh());
         }
     }
 
@@ -198,7 +324,9 @@ class CheckoutController extends Controller
             ];
         }
 
-        $preference = (new PreferenceClient())->create([
+        $successUrl = route('checkout.success', $order->number);
+
+        $preferenceData = [
             'items' => $items,
             'payer' => [
                 'name'  => $order->customer_name,
@@ -206,13 +334,21 @@ class CheckoutController extends Controller
             ],
             'external_reference' => $order->number,
             'back_urls' => [
-                'success' => route('checkout.success', $order->number),
+                'success' => $successUrl,
                 'pending' => route('checkout.pending'),
                 'failure' => route('checkout.failure'),
             ],
-            'auto_return'          => 'approved',
+            'notification_url'     => route('checkout.webhook'),
             'statement_descriptor' => 'FERIA',
-        ]);
+        ];
+
+        // MercadoPago rechaza auto_return si las back_urls son localhost.
+        // Lo activamos solo con URL pública (producción).
+        if (! Str::contains($successUrl, ['localhost', '127.0.0.1'])) {
+            $preferenceData['auto_return'] = 'approved';
+        }
+
+        $preference = (new PreferenceClient())->create($preferenceData);
 
         $order->update(['mp_preference_id' => $preference->id]);
 

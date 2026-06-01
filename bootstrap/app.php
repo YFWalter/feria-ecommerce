@@ -15,6 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
         ]);
+
+        // El webhook de MercadoPago es server-to-server, sin token CSRF.
+        $middleware->validateCsrfTokens(except: [
+            'webhooks/mercadopago',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

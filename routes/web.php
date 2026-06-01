@@ -27,6 +27,9 @@ Route::get('/checkout/pendiente', [CheckoutController::class, 'pending'])->name(
 Route::get('/checkout/fallo', [CheckoutController::class, 'failure'])->name('checkout.failure');
 Route::get('/pedido/{number}', [CheckoutController::class, 'success'])->name('checkout.success');
 
+// Webhook (IPN) de MercadoPago — sin CSRF (ver bootstrap/app.php)
+Route::post('/webhooks/mercadopago', [CheckoutController::class, 'webhook'])->name('checkout.webhook');
+
 // ── Redirección post-login (Breeze apunta a route('dashboard')) ──
 // Admin → panel; cliente → home.
 Route::get('/dashboard', function () {
