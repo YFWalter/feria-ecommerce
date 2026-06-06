@@ -35,22 +35,23 @@
             </div>
 
             @if($product->stock > 0)
-                <form action="{{ route('cart.add') }}" method="POST" x-data="{ qty: 1 }" class="flex items-center gap-2">
+                <form action="{{ route('cart.add') }}" method="POST" x-data="{ qty: 1 }"
+                      class="flex flex-col gap-2 sm:flex-row sm:items-center">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <input type="hidden" name="quantity" :value="qty">
 
                     {{-- Selector de cantidad --}}
-                    <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden flex-shrink-0">
+                    <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden flex-shrink-0 self-start">
                         <button type="button" @click="qty = Math.max(1, qty - 1)"
-                                class="px-2 py-1.5 hover:bg-gray-100 text-gray-600 transition-colors text-sm">−</button>
-                        <span class="px-1.5 py-1.5 text-sm font-medium border-x border-gray-300 min-w-[1.75rem] text-center" x-text="qty"></span>
+                                class="px-2.5 py-1.5 hover:bg-gray-100 text-gray-600 transition-colors text-sm">−</button>
+                        <span class="px-2 py-1.5 text-sm font-medium border-x border-gray-300 min-w-[1.75rem] text-center" x-text="qty"></span>
                         <button type="button" @click="qty = Math.min({{ $product->stock }}, qty + 1)"
-                                class="px-2 py-1.5 hover:bg-gray-100 text-gray-600 transition-colors text-sm">+</button>
+                                class="px-2.5 py-1.5 hover:bg-gray-100 text-gray-600 transition-colors text-sm">+</button>
                     </div>
 
                     <button type="submit"
-                            class="flex-1 bg-primary-500 hover:bg-primary-600 text-white text-xs font-medium px-2 py-1.5 rounded-lg transition-colors">
+                            class="w-full sm:flex-1 bg-primary-500 hover:bg-primary-600 text-white text-xs font-medium px-2 py-2 sm:py-1.5 rounded-lg transition-colors">
                         Agregar
                     </button>
                 </form>

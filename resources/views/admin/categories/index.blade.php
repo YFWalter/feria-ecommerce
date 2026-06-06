@@ -27,6 +27,7 @@
             @endif
         </p>
     @else
+        <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
                 <tr class="text-left text-gray-500 border-b border-gray-100">
@@ -75,6 +76,7 @@
                 @endforeach
             </tbody>
         </table>
+        </div>
     @endif
 </div>
 

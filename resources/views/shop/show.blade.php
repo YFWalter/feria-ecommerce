@@ -1,5 +1,10 @@
 @extends('layouts.app')
-@section('title', $product->name)
+@section('title', $product->name . ' — ' . setting('site_name'))
+@section('og_title', $product->name)
+@section('meta_description', \Illuminate\Support\Str::limit(strip_tags($product->description ?? ''), 150) ?: setting('meta_description'))
+@if($product->first_image)
+    @section('og_image', asset('storage/' . $product->first_image))
+@endif
 
 @section('content')
 <div class="max-w-5xl mx-auto px-4 py-8">

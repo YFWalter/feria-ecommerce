@@ -11,9 +11,10 @@ class SettingController extends Controller
 {
     /** Claves de texto editables desde el formulario. */
     private const TEXT_KEYS = [
-        'site_name', 'theme_color',
+        'site_name', 'theme_color', 'meta_description',
         'hero_title', 'hero_highlight', 'hero_text', 'hero_button',
         'footer_tagline', 'footer_email', 'footer_phone',
+        'whatsapp_number', 'whatsapp_message',
     ];
 
     public function edit()
@@ -35,6 +36,9 @@ class SettingController extends Controller
             'footer_tagline' => 'nullable|string|max:200',
             'footer_email'   => 'nullable|email|max:150',
             'footer_phone'   => 'nullable|string|max:50',
+            'whatsapp_number' => 'nullable|string|max:30',
+            'whatsapp_message' => 'nullable|string|max:300',
+            'meta_description' => 'nullable|string|max:300',
             'logo'           => 'nullable|image|max:1024',
         ]);
 

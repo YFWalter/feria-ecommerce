@@ -24,6 +24,7 @@
     @if($orders->isEmpty())
         <p class="px-5 py-12 text-center text-sm text-gray-500">No hay pedidos que coincidan.</p>
     @else
+        <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
                 <tr class="text-left text-gray-500 border-b border-gray-100">
@@ -59,6 +60,7 @@
                 @endforeach
             </tbody>
         </table>
+        </div>
     @endif
 </div>
 

@@ -12,10 +12,15 @@
 </head>
 <body class="font-sans antialiased bg-gray-100">
 
-<div class="flex h-screen overflow-hidden">
+<div class="flex h-screen overflow-hidden" x-data="{ sidebarOpen: false }">
+
+    {{-- Backdrop (solo mobile) --}}
+    <div x-show="sidebarOpen" x-transition.opacity @click="sidebarOpen = false"
+         class="fixed inset-0 bg-black/50 z-30 md:hidden" style="display:none"></div>
 
     {{-- Sidebar --}}
-    <aside class="w-64 bg-gray-900 text-gray-100 flex flex-col flex-shrink-0">
+    <aside class="fixed md:static inset-y-0 left-0 z-40 w-64 bg-gray-900 text-gray-100 flex flex-col flex-shrink-0 transform transition-transform duration-200 md:translate-x-0"
+           :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
         <div class="px-6 py-5 border-b border-gray-700">
             <a href="{{ route('home') }}" class="text-xl font-bold text-primary-400">{{ setting('site_name') }}</a>
             <p class="text-xs text-gray-400 mt-0.5">Panel de administración</p>
@@ -60,8 +65,11 @@
 
     {{-- Contenido principal --}}
     <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-            <h1 class="text-lg font-semibold text-gray-800">@yield('title', 'Dashboard')</h1>
+        <header class="bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex items-center gap-3">
+            <button @click="sidebarOpen = true" class="md:hidden text-gray-600 flex-shrink-0" aria-label="Abrir menú">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <h1 class="text-lg font-semibold text-gray-800 flex-1 truncate">@yield('title', 'Dashboard')</h1>
             @yield('header-actions')
         </header>
 

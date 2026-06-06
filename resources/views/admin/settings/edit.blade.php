@@ -27,6 +27,13 @@
         </div>
 
         <div>
+            <label for="meta_description" class="block text-sm font-medium text-gray-700 mb-1">Descripción para buscadores y redes</label>
+            <textarea name="meta_description" id="meta_description" rows="2"
+                      class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">{{ old('meta_description', setting('meta_description')) }}</textarea>
+            <p class="text-xs text-gray-400 mt-1">Se muestra en Google y al compartir el link en WhatsApp/redes.</p>
+        </div>
+
+        <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Logo</label>
             @if(setting('logo_path'))
                 <div class="flex items-center gap-3 mb-2">
@@ -118,6 +125,29 @@
                 <label for="footer_phone" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
                 <input type="text" name="footer_phone" id="footer_phone"
                        value="{{ old('footer_phone', setting('footer_phone')) }}"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
+            </div>
+        </div>
+    </div>
+
+    {{-- WhatsApp --}}
+    <div class="bg-white border border-gray-200 rounded-xl p-6 space-y-5">
+        <h2 class="font-semibold text-gray-800">Botón de WhatsApp</h2>
+        <p class="text-sm text-gray-500">Si cargás un número, aparece un botón flotante de WhatsApp en la tienda.</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label for="whatsapp_number" class="block text-sm font-medium text-gray-700 mb-1">Número (con código de país)</label>
+                <input type="text" name="whatsapp_number" id="whatsapp_number"
+                       value="{{ old('whatsapp_number', setting('whatsapp_number')) }}"
+                       placeholder="5491122334455"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
+                <p class="text-xs text-gray-400 mt-1">Ej: 54 9 11 2233-4455 → <code>5491122334455</code> (sin espacios ni signos).</p>
+            </div>
+            <div>
+                <label for="whatsapp_message" class="block text-sm font-medium text-gray-700 mb-1">Mensaje predefinido</label>
+                <input type="text" name="whatsapp_message" id="whatsapp_message"
+                       value="{{ old('whatsapp_message', setting('whatsapp_message')) }}"
                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
             </div>
         </div>
