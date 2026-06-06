@@ -109,7 +109,11 @@ class CheckoutController extends Controller
         // Si MercadoPago está configurado, redirigimos a la pasarela de pago.
         if (config('services.mercadopago.access_token')) {
             try {
-                return redirect()->away($this->createMercadoPagoPreference($order));
+                $initPoint = $this->createMercadoPagoPreference($order);
+                // El pedido ya está creado: vaciamos el carrito antes de ir a pagar.
+                session()->forget('cart');
+
+                return redirect()->away($initPoint);
             } catch (\Throwable $e) {
                 Log::error('MercadoPago preference error: ' . $e->getMessage());
                 // Si MP falla, conservamos el pedido y seguimos con el flujo sin pago.
