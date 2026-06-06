@@ -26,7 +26,7 @@
             <div>
                 <p class="uppercase text-gray-500 text-xs font-semibold tracking-wider mb-4">Categorías</p>
                 <ul class="space-y-2 text-sm">
-                    @foreach(\App\Models\Category::where('is_active', true)->orderBy('order')->take(4)->get() as $cat)
+                    @foreach(\App\Models\Category::where('is_active', true)->where('show_on_home', true)->orderBy('order')->take(4)->get() as $cat)
                         <li>
                             <a href="{{ route('products.index', ['categoria' => $cat->slug]) }}" class="hover:text-white transition-colors">
                                 {{ $cat->name }}

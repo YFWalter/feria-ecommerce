@@ -10,7 +10,16 @@ class ShopController extends Controller
 {
     public function home()
     {
-        $categories = Category::where('is_active', true)->orderBy('order')->get();
+        $categoriesQuery = Category::where('is_active', true)
+            ->where('show_on_home', true)
+            ->orderBy('order');
+
+        if (($limit = (int) setting('home_categories_limit', 0)) > 0) {
+            $categoriesQuery->take($limit);
+        }
+
+        $categories = $categoriesQuery->get();
+
         $featured   = Product::with('category')
             ->where('is_active', true)
             ->where('featured', true)

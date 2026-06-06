@@ -44,6 +44,14 @@
         <span class="text-sm text-gray-700">Categoría activa</span>
     </label>
 
+    <label class="flex items-center gap-2">
+        <input type="hidden" name="show_on_home" value="0">
+        <input type="checkbox" name="show_on_home" value="1"
+               {{ old('show_on_home', $category->show_on_home ?? true) ? 'checked' : '' }}
+               class="rounded border-gray-300 text-primary-500 focus:ring-primary-400">
+        <span class="text-sm text-gray-700">Mostrar en la página de inicio</span>
+    </label>
+
     <div class="flex items-center gap-3 pt-2">
         <button type="submit"
                 class="bg-primary-500 hover:bg-primary-600 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors">

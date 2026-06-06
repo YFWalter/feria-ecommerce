@@ -130,6 +130,35 @@
         </div>
     </div>
 
+    {{-- Categorías en la home --}}
+    <div class="bg-white border border-gray-200 rounded-xl p-6 space-y-5">
+        <h2 class="font-semibold text-gray-800">Categorías en la página de inicio</h2>
+        <p class="text-sm text-gray-500">Elegí cuántas mostrar y cómo. <em>Cuáles</em> se muestran se controla con la opción “Mostrar en la página de inicio” de cada categoría.</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label for="home_categories_limit" class="block text-sm font-medium text-gray-700 mb-1">Cantidad máxima a mostrar</label>
+                <input type="number" name="home_categories_limit" id="home_categories_limit" min="0" max="50"
+                       value="{{ old('home_categories_limit', setting('home_categories_limit')) }}"
+                       class="w-32 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
+                <p class="text-xs text-gray-400 mt-1">0 = mostrar todas.</p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Estilo de visualización</label>
+                <div class="flex gap-4 mt-1">
+                    @foreach(['cards' => 'Tarjetas con imagen', 'compact' => 'Compacto (chips)'] as $val => $label)
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="home_categories_style" value="{{ $val }}"
+                                   {{ old('home_categories_style', setting('home_categories_style')) === $val ? 'checked' : '' }}
+                                   class="text-primary-500 focus:ring-primary-400">
+                            <span class="text-sm text-gray-700">{{ $label }}</span>
+                        </label>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- WhatsApp --}}
     <div class="bg-white border border-gray-200 rounded-xl p-6 space-y-5">
         <h2 class="font-semibold text-gray-800">Botón de WhatsApp</h2>

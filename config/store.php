@@ -22,6 +22,8 @@ return [
         'whatsapp_number' => '',
         'whatsapp_message' => '¡Hola! Quería hacer una consulta sobre la tienda.',
         'meta_description' => 'Tienda online de artículos de bazar. Calidad a buen precio, directo a tu puerta.',
+        'home_categories_limit' => 0,        // 0 = mostrar todas
+        'home_categories_style' => 'cards',  // cards | compact
     ],
 
     /*

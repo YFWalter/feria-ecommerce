@@ -19,10 +19,11 @@ class SettingManagementTest extends TestCase
     private function payload(array $overrides = []): array
     {
         return array_merge([
-            'site_name'   => 'Mi Tienda',
-            'theme_color' => 'emerald',
-            'hero_title'  => 'Bienvenido',
-            'hero_button' => 'Comprar',
+            'site_name'             => 'Mi Tienda',
+            'theme_color'           => 'emerald',
+            'home_categories_style' => 'cards',
+            'hero_title'            => 'Bienvenido',
+            'hero_button'           => 'Comprar',
         ], $overrides);
     }
 

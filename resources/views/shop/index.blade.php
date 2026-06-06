@@ -4,6 +4,19 @@
 @section('content')
 <div class="max-w-6xl mx-auto px-4 py-8">
 
+    {{-- Buscador principal --}}
+    <div class="mb-6">
+        <div class="flex gap-2 max-w-2xl">
+            <input type="text" name="q" form="filtros" value="{{ request('q') }}"
+                   placeholder="Buscar productos por nombre..."
+                   class="flex-1 border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400">
+            <button type="submit" form="filtros"
+                    class="bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+                Buscar
+            </button>
+        </div>
+    </div>
+
     <div class="flex flex-col md:flex-row gap-8">
 
         {{-- Sidebar filtros --}}
@@ -31,19 +44,6 @@
                             @endforeach
                         </div>
                     </div>
-
-                    {{-- Búsqueda --}}
-                    <div>
-                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Buscar</p>
-                        <input type="text" name="q" value="{{ request('q') }}"
-                               placeholder="Nombre del producto..."
-                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400">
-                    </div>
-
-                    <button type="submit"
-                            class="w-full bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium py-2 rounded-lg transition-colors">
-                        Buscar
-                    </button>
 
                     @if(request()->hasAny(['categoria', 'q']))
                         <a href="{{ route('products.index') }}"

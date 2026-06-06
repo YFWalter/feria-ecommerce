@@ -31,9 +31,10 @@ class CategoryController extends Controller
     {
         $data = $this->validateData($request);
 
-        $data['slug']      = $this->uniqueSlug($data['name']);
-        $data['is_active'] = $request->boolean('is_active');
-        $data['order']     = $data['order'] ?? 0;
+        $data['slug']         = $this->uniqueSlug($data['name']);
+        $data['is_active']    = $request->boolean('is_active');
+        $data['show_on_home'] = $request->boolean('show_on_home');
+        $data['order']        = $data['order'] ?? 0;
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('categories', 'public');
@@ -57,8 +58,9 @@ class CategoryController extends Controller
         if ($data['name'] !== $category->name) {
             $data['slug'] = $this->uniqueSlug($data['name'], $category->id);
         }
-        $data['is_active'] = $request->boolean('is_active');
-        $data['order']     = $data['order'] ?? 0;
+        $data['is_active']    = $request->boolean('is_active');
+        $data['show_on_home'] = $request->boolean('show_on_home');
+        $data['order']        = $data['order'] ?? 0;
 
         if ($request->hasFile('image')) {
             if ($category->image) {
@@ -92,10 +94,11 @@ class CategoryController extends Controller
     private function validateData(Request $request): array
     {
         return $request->validate([
-            'name'      => 'required|string|max:255',
-            'order'     => 'nullable|integer|min:0',
-            'image'     => 'nullable|image|max:2048',
-            'is_active' => 'nullable|boolean',
+            'name'         => 'required|string|max:255',
+            'order'        => 'nullable|integer|min:0',
+            'image'        => 'nullable|image|max:2048',
+            'is_active'    => 'nullable|boolean',
+            'show_on_home' => 'nullable|boolean',
         ]);
     }
 

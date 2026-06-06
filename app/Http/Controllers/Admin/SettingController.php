@@ -15,6 +15,7 @@ class SettingController extends Controller
         'hero_title', 'hero_highlight', 'hero_text', 'hero_button',
         'footer_tagline', 'footer_email', 'footer_phone',
         'whatsapp_number', 'whatsapp_message',
+        'home_categories_limit', 'home_categories_style',
     ];
 
     public function edit()
@@ -39,6 +40,8 @@ class SettingController extends Controller
             'whatsapp_number' => 'nullable|string|max:30',
             'whatsapp_message' => 'nullable|string|max:300',
             'meta_description' => 'nullable|string|max:300',
+            'home_categories_limit' => 'nullable|integer|min:0|max:50',
+            'home_categories_style' => 'required|in:cards,compact',
             'logo'           => 'nullable|image|max:1024',
         ]);
 
