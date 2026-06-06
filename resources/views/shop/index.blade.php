@@ -18,14 +18,14 @@
                         <div class="space-y-1.5">
                             <label class="flex items-center gap-2 cursor-pointer">
                                 <input type="radio" name="categoria" value="" {{ !request('categoria') ? 'checked' : '' }}
-                                       class="text-amber-500" onchange="document.getElementById('filtros').submit()">
+                                       class="text-primary-500" onchange="document.getElementById('filtros').submit()">
                                 <span class="text-sm text-gray-700">Todas</span>
                             </label>
                             @foreach($categories as $cat)
                                 <label class="flex items-center gap-2 cursor-pointer">
                                     <input type="radio" name="categoria" value="{{ $cat->slug }}"
                                            {{ request('categoria') === $cat->slug ? 'checked' : '' }}
-                                           class="text-amber-500" onchange="document.getElementById('filtros').submit()">
+                                           class="text-primary-500" onchange="document.getElementById('filtros').submit()">
                                     <span class="text-sm text-gray-700">{{ $cat->name }}</span>
                                 </label>
                             @endforeach
@@ -37,11 +37,11 @@
                         <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Buscar</p>
                         <input type="text" name="q" value="{{ request('q') }}"
                                placeholder="Nombre del producto..."
-                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400">
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400">
                     </div>
 
                     <button type="submit"
-                            class="w-full bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium py-2 rounded-lg transition-colors">
+                            class="w-full bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium py-2 rounded-lg transition-colors">
                         Buscar
                     </button>
 
@@ -62,7 +62,7 @@
                     {{ $products->total() }} {{ Str::plural('producto', $products->total()) }} encontrado{{ $products->total() != 1 ? 's' : '' }}
                 </p>
                 <select name="orden" onchange="this.form.submit()" form="filtros"
-                        class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400">
+                        class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400">
                     <option value="recent" {{ request('orden','recent') === 'recent' ? 'selected' : '' }}>Más recientes</option>
                     <option value="price_asc" {{ request('orden') === 'price_asc' ? 'selected' : '' }}>Menor precio</option>
                     <option value="price_desc" {{ request('orden') === 'price_desc' ? 'selected' : '' }}>Mayor precio</option>
@@ -75,7 +75,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     <p class="font-medium">No encontramos productos</p>
-                    <a href="{{ route('products.index') }}" class="text-amber-600 text-sm hover:underline mt-1 inline-block">Ver todos</a>
+                    <a href="{{ route('products.index') }}" class="text-primary-600 text-sm hover:underline mt-1 inline-block">Ver todos</a>
                 </div>
             @else
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">

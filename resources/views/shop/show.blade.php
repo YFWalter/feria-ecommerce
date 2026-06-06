@@ -5,13 +5,13 @@
 <div class="max-w-5xl mx-auto px-4 py-8">
 
     <nav class="text-sm text-gray-500 mb-6 flex items-center gap-2">
-        <a href="{{ route('home') }}" class="hover:text-amber-600">Inicio</a>
+        <a href="{{ route('home') }}" class="hover:text-primary-600">Inicio</a>
         <span>/</span>
-        <a href="{{ route('products.index') }}" class="hover:text-amber-600">Productos</a>
+        <a href="{{ route('products.index') }}" class="hover:text-primary-600">Productos</a>
         @if($product->category)
             <span>/</span>
             <a href="{{ route('products.index', ['categoria' => $product->category->slug]) }}"
-               class="hover:text-amber-600">{{ $product->category->name }}</a>
+               class="hover:text-primary-600">{{ $product->category->name }}</a>
         @endif
         <span>/</span>
         <span class="text-gray-700">{{ $product->name }}</span>
@@ -41,7 +41,7 @@
                 <div class="flex gap-2 mt-3">
                     @foreach($images as $i => $img)
                         <button @click="active = {{ $i }}"
-                                :class="active === {{ $i }} ? 'border-amber-500' : 'border-transparent'"
+                                :class="active === {{ $i }} ? 'border-primary-500' : 'border-transparent'"
                                 class="w-16 h-16 rounded-lg border-2 overflow-hidden flex-shrink-0 transition-colors">
                             <img src="{{ asset('storage/' . $img) }}" class="w-full h-full object-cover">
                         </button>
@@ -53,7 +53,7 @@
         {{-- Info --}}
         <div class="flex flex-col">
             @if($product->category)
-                <span class="text-sm text-amber-600 font-medium">{{ $product->category->name }}</span>
+                <span class="text-sm text-primary-600 font-medium">{{ $product->category->name }}</span>
             @endif
 
             <h1 class="text-2xl font-bold text-gray-900 mt-1">{{ $product->name }}</h1>
@@ -70,7 +70,7 @@
                     <span class="text-lg text-gray-400 line-through">
                         ${{ number_format($product->compare_price, 0, ',', '.') }}
                     </span>
-                    <span class="bg-amber-100 text-amber-700 text-sm font-semibold px-2 py-0.5 rounded">
+                    <span class="bg-primary-100 text-primary-700 text-sm font-semibold px-2 py-0.5 rounded">
                         -{{ $product->discountPercent() }}%
                     </span>
                 @endif
@@ -106,7 +106,7 @@
                     </div>
 
                     <button type="submit"
-                            class="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 rounded-xl transition-colors text-lg">
+                            class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 rounded-xl transition-colors text-lg">
                         Agregar al carrito
                     </button>
                 </form>

@@ -1,6 +1,6 @@
 @php
     $map = [
-        'pending' => ['Pendiente', 'bg-amber-50 text-amber-700'],
+        'pending' => ['Pendiente', 'bg-primary-50 text-primary-700'],
         'paid'    => ['Pagado',    'bg-green-50 text-green-700'],
         'failed'  => ['Fallido',   'bg-red-50 text-red-600'],
     ];

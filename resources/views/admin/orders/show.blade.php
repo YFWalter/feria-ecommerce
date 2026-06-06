@@ -74,7 +74,7 @@
                 <div>
                     <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
                     <select name="status" id="status"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white text-sm focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none">
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white text-sm focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
                         @foreach($statuses as $key => $label)
                             <option value="{{ $key }}" {{ $order->status === $key ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
@@ -84,14 +84,14 @@
                 <div>
                     <label for="payment_status" class="block text-sm font-medium text-gray-700 mb-1">Estado del pago</label>
                     <select name="payment_status" id="payment_status"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white text-sm focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none">
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white text-sm focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
                         <option value="pending" {{ $order->payment_status === 'pending' ? 'selected' : '' }}>Pendiente</option>
                         <option value="paid" {{ $order->payment_status === 'paid' ? 'selected' : '' }}>Pagado</option>
                         <option value="failed" {{ $order->payment_status === 'failed' ? 'selected' : '' }}>Fallido</option>
                     </select>
                 </div>
 
-                <button class="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2.5 rounded-lg transition-colors">
+                <button class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 rounded-lg transition-colors">
                     Guardar
                 </button>
             </form>

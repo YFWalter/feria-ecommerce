@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\SettingController;
 use Illuminate\Support\Facades\Route;
 
 // ── Tienda pública ──────────────────────────────────────────
@@ -51,6 +52,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('pedidos', OrderController::class)
         ->parameters(['pedidos' => 'order'])
         ->only(['index', 'show', 'update']);
+
+    Route::get('/configuracion', [SettingController::class, 'edit'])->name('configuracion.edit');
+    Route::put('/configuracion', [SettingController::class, 'update'])->name('configuracion.update');
 });
 
 // ── Auth (generado por Breeze) ──────────────────────────────

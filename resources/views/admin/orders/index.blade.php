@@ -7,9 +7,9 @@
 <form method="GET" class="flex flex-wrap items-center gap-3 mb-4">
     <input type="text" name="q" value="{{ request('q') }}"
            placeholder="Buscar por nº, cliente o email…"
-           class="flex-1 min-w-[200px] max-w-sm border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none">
+           class="flex-1 min-w-[200px] max-w-sm border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
     <select name="status" onchange="this.form.submit()"
-            class="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none">
+            class="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
         <option value="">Todos los estados</option>
         @foreach($statuses as $key => $label)
             <option value="{{ $key }}" {{ request('status') === $key ? 'selected' : '' }}>{{ $label }}</option>

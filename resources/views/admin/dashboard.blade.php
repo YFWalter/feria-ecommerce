@@ -17,7 +17,7 @@
         <p class="text-sm text-gray-500">Pedidos</p>
         <p class="text-2xl font-bold text-gray-900 mt-1">{{ $stats['orders'] }}</p>
         @if($stats['pending_orders'] > 0)
-            <p class="text-xs text-amber-600 mt-1">{{ $stats['pending_orders'] }} pendiente(s)</p>
+            <p class="text-xs text-primary-600 mt-1">{{ $stats['pending_orders'] }} pendiente(s)</p>
         @endif
     </div>
     <div class="bg-white border border-gray-200 rounded-xl p-5">
@@ -32,7 +32,7 @@
     <div class="lg:col-span-2 bg-white border border-gray-200 rounded-xl overflow-hidden">
         <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
             <h2 class="font-semibold text-gray-800">Pedidos recientes</h2>
-            <a href="{{ route('admin.pedidos.index') }}" class="text-sm text-amber-600 hover:text-amber-700">Ver todos</a>
+            <a href="{{ route('admin.pedidos.index') }}" class="text-sm text-primary-600 hover:text-primary-700">Ver todos</a>
         </div>
 
         @if($recentOrders->isEmpty())
@@ -51,7 +51,7 @@
                     @foreach($recentOrders as $order)
                         <tr class="border-b border-gray-50 hover:bg-gray-50">
                             <td class="px-5 py-3">
-                                <a href="{{ route('admin.pedidos.show', $order) }}" class="font-medium text-gray-900 hover:text-amber-600">
+                                <a href="{{ route('admin.pedidos.show', $order) }}" class="font-medium text-gray-900 hover:text-primary-600">
                                     {{ $order->number }}
                                 </a>
                                 <p class="text-xs text-gray-400">{{ $order->created_at->format('d/m/Y H:i') }}</p>
@@ -83,10 +83,10 @@
                 @foreach($lowStock as $product)
                     <li class="px-5 py-3 flex items-center justify-between">
                         <a href="{{ route('admin.productos.edit', $product) }}"
-                           class="text-sm text-gray-700 hover:text-amber-600 truncate mr-2">
+                           class="text-sm text-gray-700 hover:text-primary-600 truncate mr-2">
                             {{ $product->name }}
                         </a>
-                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full {{ $product->stock == 0 ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-700' }}">
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full {{ $product->stock == 0 ? 'bg-red-50 text-red-600' : 'bg-primary-50 text-primary-700' }}">
                             {{ $product->stock }} u.
                         </span>
                     </li>

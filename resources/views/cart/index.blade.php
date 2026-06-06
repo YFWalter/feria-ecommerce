@@ -12,7 +12,7 @@
             </svg>
             <p class="text-gray-500 mb-4">Tu carrito está vacío</p>
             <a href="{{ route('products.index') }}"
-               class="inline-block bg-amber-500 hover:bg-amber-600 text-white font-medium px-6 py-2.5 rounded-xl transition-colors">
+               class="inline-block bg-primary-500 hover:bg-primary-600 text-white font-medium px-6 py-2.5 rounded-xl transition-colors">
                 Ver productos
             </a>
         </div>
@@ -39,10 +39,10 @@
 
                         <div class="flex-1 min-w-0">
                             <a href="{{ route('products.show', $item['slug']) }}"
-                               class="font-medium text-gray-900 hover:text-amber-600 transition-colors line-clamp-1">
+                               class="font-medium text-gray-900 hover:text-primary-600 transition-colors line-clamp-1">
                                 {{ $item['name'] }}
                             </a>
-                            <p class="text-amber-600 font-semibold mt-1">
+                            <p class="text-primary-600 font-semibold mt-1">
                                 ${{ number_format($item['price'], 0, ',', '.') }}
                             </p>
                         </div>
@@ -92,7 +92,7 @@
                     <span>${{ number_format($total, 0, ',', '.') }}</span>
                 </div>
                 <a href="{{ route('checkout.index') }}"
-                   class="mt-4 block w-full text-center bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 rounded-xl transition-colors">
+                   class="mt-4 block w-full text-center bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 rounded-xl transition-colors">
                     Finalizar compra
                 </a>
                 <a href="{{ route('products.index') }}"

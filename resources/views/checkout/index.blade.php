@@ -27,7 +27,7 @@
                 <label for="customer_name" class="block text-sm font-medium text-gray-700 mb-1">Nombre completo *</label>
                 <input type="text" name="customer_name" id="customer_name" required
                        value="{{ old('customer_name') }}"
-                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none">
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -35,13 +35,13 @@
                     <label for="customer_email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
                     <input type="email" name="customer_email" id="customer_email" required
                            value="{{ old('customer_email') }}"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none">
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
                 </div>
                 <div>
                     <label for="customer_phone" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
                     <input type="text" name="customer_phone" id="customer_phone"
                            value="{{ old('customer_phone') }}"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none">
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
                 </div>
             </div>
 
@@ -49,14 +49,14 @@
                 <label for="shipping_address" class="block text-sm font-medium text-gray-700 mb-1">Dirección de envío *</label>
                 <textarea name="shipping_address" id="shipping_address" rows="3" required
                           placeholder="Calle, número, piso/depto, localidad, código postal"
-                          class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none">{{ old('shipping_address') }}</textarea>
+                          class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">{{ old('shipping_address') }}</textarea>
             </div>
 
             <div>
                 <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Notas (opcional)</label>
                 <textarea name="notes" id="notes" rows="2"
                           placeholder="Indicaciones para la entrega, horarios, etc."
-                          class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none">{{ old('notes') }}</textarea>
+                          class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">{{ old('notes') }}</textarea>
             </div>
         </div>
 
@@ -89,7 +89,7 @@
             </div>
 
             <button type="submit"
-                    class="mt-4 block w-full text-center bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 rounded-xl transition-colors">
+                    class="mt-4 block w-full text-center bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 rounded-xl transition-colors">
                 Confirmar pedido
             </button>
             <a href="{{ route('cart.index') }}"

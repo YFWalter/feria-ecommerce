@@ -4,8 +4,8 @@
 @section('content')
 <div class="max-w-2xl mx-auto px-4 py-12">
     <div class="bg-white border border-gray-200 rounded-xl p-8 text-center">
-        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-amber-100 flex items-center justify-center">
-            <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-primary-100 flex items-center justify-center">
+            <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
         </div>
@@ -22,7 +22,7 @@
         </p>
 
         <a href="{{ route('products.index') }}"
-           class="inline-block mt-6 bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors">
+           class="inline-block mt-6 bg-primary-500 hover:bg-primary-600 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors">
             Volver a la tienda
         </a>
     </div>

@@ -3,7 +3,7 @@
 
 @section('header-actions')
     <a href="{{ route('admin.productos.create') }}"
-       class="bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+       class="bg-primary-500 hover:bg-primary-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
         + Nuevo producto
     </a>
 @endsection
@@ -13,14 +13,14 @@
 <form method="GET" class="mb-4">
     <input type="text" name="q" value="{{ request('q') }}"
            placeholder="Buscar por nombre o SKU…"
-           class="w-full max-w-sm border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none">
+           class="w-full max-w-sm border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
 </form>
 
 <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
     @if($products->isEmpty())
         <p class="px-5 py-12 text-center text-sm text-gray-500">
             No se encontraron productos.
-            <a href="{{ route('admin.productos.create') }}" class="text-amber-600 hover:underline">Crear uno</a>.
+            <a href="{{ route('admin.productos.create') }}" class="text-primary-600 hover:underline">Crear uno</a>.
         </p>
     @else
         <table class="w-full text-sm">
@@ -47,7 +47,7 @@
                                 <div>
                                     <p class="font-medium text-gray-900">{{ $product->name }}</p>
                                     @if($product->featured)
-                                        <span class="text-xs text-amber-600">★ Destacado</span>
+                                        <span class="text-xs text-primary-600">★ Destacado</span>
                                     @endif
                                 </div>
                             </div>
@@ -57,7 +57,7 @@
                             ${{ number_format($product->price, 0, ',', '.') }}
                         </td>
                         <td class="px-5 py-3 text-right">
-                            <span class="{{ $product->stock <= 5 ? 'text-amber-600 font-semibold' : 'text-gray-600' }}">
+                            <span class="{{ $product->stock <= 5 ? 'text-primary-600 font-semibold' : 'text-gray-600' }}">
                                 {{ $product->stock }}
                             </span>
                         </td>
@@ -70,7 +70,7 @@
                         </td>
                         <td class="px-5 py-3 text-right whitespace-nowrap">
                             <a href="{{ route('admin.productos.edit', $product) }}"
-                               class="text-amber-600 hover:text-amber-700 mr-3">Editar</a>
+                               class="text-primary-600 hover:text-primary-700 mr-3">Editar</a>
                             <form action="{{ route('admin.productos.destroy', $product) }}" method="POST" class="inline"
                                   onsubmit="return confirm('¿Eliminar &quot;{{ $product->name }}&quot;?')">
                                 @csrf @method('DELETE')

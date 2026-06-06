@@ -22,7 +22,7 @@
 
         <div class="flex flex-col sm:flex-row gap-3 justify-center mt-6">
             <a href="{{ route('cart.index') }}"
-               class="inline-block bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors">
+               class="inline-block bg-primary-500 hover:bg-primary-600 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors">
                 Volver al carrito
             </a>
             <a href="{{ route('products.index') }}"

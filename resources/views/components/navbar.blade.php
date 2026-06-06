@@ -3,8 +3,12 @@
         <div class="flex items-center justify-between h-16">
 
             {{-- Logo --}}
-            <a href="{{ route('home') }}" class="text-2xl font-bold text-amber-500">
-                Feria
+            <a href="{{ route('home') }}" class="flex items-center">
+                @if(setting('logo_path'))
+                    <img src="{{ asset('storage/' . setting('logo_path')) }}" alt="{{ setting('site_name') }}" class="h-9 w-auto">
+                @else
+                    <span class="text-2xl font-bold text-primary-500">{{ setting('site_name') }}</span>
+                @endif
             </a>
 
             {{-- Links desktop --}}
@@ -30,7 +34,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                         </svg>
                         @if($cartCount > 0)
-                            <span class="absolute -top-2 -right-2 bg-amber-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
+                            <span class="absolute -top-2 -right-2 bg-primary-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
                                 {{ $cartCount }}
                             </span>
                         @endif
@@ -47,7 +51,7 @@
                         @if(empty($cart))
                             <div class="px-4 py-8 text-center">
                                 <p class="text-sm text-gray-500 mb-3">Tu carrito está vacío</p>
-                                <a href="{{ route('products.index') }}" class="text-sm text-amber-600 hover:underline">Ver productos</a>
+                                <a href="{{ route('products.index') }}" class="text-sm text-primary-600 hover:underline">Ver productos</a>
                             </div>
                         @else
                             <div class="max-h-72 overflow-y-auto divide-y divide-gray-50">
@@ -85,7 +89,7 @@
                                     <span>${{ number_format($cartTotal, 0, ',', '.') }}</span>
                                 </div>
                                 <a href="{{ route('checkout.index') }}"
-                                   class="block w-full text-center bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold py-2.5 rounded-lg transition-colors mb-2">
+                                   class="block w-full text-center bg-primary-500 hover:bg-primary-600 text-white text-sm font-semibold py-2.5 rounded-lg transition-colors mb-2">
                                     Finalizar compra
                                 </a>
                                 <a href="{{ route('cart.index') }}"

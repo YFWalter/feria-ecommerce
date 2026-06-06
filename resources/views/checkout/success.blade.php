@@ -20,7 +20,7 @@
                 Pago aprobado
             </p>
         @else
-            <p class="inline-flex items-center gap-1.5 mt-4 px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-sm font-medium">
+            <p class="inline-flex items-center gap-1.5 mt-4 px-3 py-1 rounded-full bg-primary-50 text-primary-700 text-sm font-medium">
                 Pago pendiente · nos contactaremos para coordinarlo
             </p>
         @endif
@@ -64,7 +64,7 @@
 
     <div class="text-center mt-6">
         <a href="{{ route('products.index') }}"
-           class="inline-block bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors">
+           class="inline-block bg-primary-500 hover:bg-primary-600 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors">
             Seguir comprando
         </a>
     </div>

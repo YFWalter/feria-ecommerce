@@ -19,13 +19,13 @@
                 <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
                 <input type="text" name="name" id="name" required
                        value="{{ old('name', $p->name ?? '') }}"
-                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none">
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
             </div>
 
             <div>
                 <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
                 <textarea name="description" id="description" rows="5"
-                          class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none">{{ old('description', $p->description ?? '') }}</textarea>
+                          class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">{{ old('description', $p->description ?? '') }}</textarea>
             </div>
         </div>
 
@@ -51,7 +51,7 @@
 
             <div>
                 <input type="file" name="images[]" accept="image/*" multiple
-                       class="block text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100">
+                       class="block text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100">
                 <p class="text-xs text-gray-400 mt-1">Podés subir varias. JPG/PNG, máx 2 MB cada una. La primera es la principal.</p>
             </div>
         </div>
@@ -63,7 +63,7 @@
             <div>
                 <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Categoría *</label>
                 <select name="category_id" id="category_id" required
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none">
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
                     <option value="">Seleccionar…</option>
                     @foreach($categories as $cat)
                         <option value="{{ $cat->id }}" {{ (string) old('category_id', $p->category_id ?? '') === (string) $cat->id ? 'selected' : '' }}>
@@ -77,14 +77,14 @@
                 <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Precio *</label>
                 <input type="number" name="price" id="price" step="0.01" min="0" required
                        value="{{ old('price', $p->price ?? '') }}"
-                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none">
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
             </div>
 
             <div>
                 <label for="compare_price" class="block text-sm font-medium text-gray-700 mb-1">Precio anterior</label>
                 <input type="number" name="compare_price" id="compare_price" step="0.01" min="0"
                        value="{{ old('compare_price', $p->compare_price ?? '') }}"
-                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none">
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
                 <p class="text-xs text-gray-400 mt-1">Para mostrar descuento (tachado).</p>
             </div>
 
@@ -92,14 +92,14 @@
                 <label for="stock" class="block text-sm font-medium text-gray-700 mb-1">Stock *</label>
                 <input type="number" name="stock" id="stock" min="0" required
                        value="{{ old('stock', $p->stock ?? 0) }}"
-                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none">
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
             </div>
 
             <div>
                 <label for="sku" class="block text-sm font-medium text-gray-700 mb-1">SKU</label>
                 <input type="text" name="sku" id="sku"
                        value="{{ old('sku', $p->sku ?? '') }}"
-                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none">
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
             </div>
         </div>
 
@@ -108,21 +108,21 @@
                 <input type="hidden" name="is_active" value="0">
                 <input type="checkbox" name="is_active" value="1"
                        {{ old('is_active', $p->is_active ?? true) ? 'checked' : '' }}
-                       class="rounded border-gray-300 text-amber-500 focus:ring-amber-400">
+                       class="rounded border-gray-300 text-primary-500 focus:ring-primary-400">
                 <span class="text-sm text-gray-700">Producto activo (visible en la tienda)</span>
             </label>
             <label class="flex items-center gap-2">
                 <input type="hidden" name="featured" value="0">
                 <input type="checkbox" name="featured" value="1"
                        {{ old('featured', $p->featured ?? false) ? 'checked' : '' }}
-                       class="rounded border-gray-300 text-amber-500 focus:ring-amber-400">
+                       class="rounded border-gray-300 text-primary-500 focus:ring-primary-400">
                 <span class="text-sm text-gray-700">Destacado en la home</span>
             </label>
         </div>
 
         <div class="flex items-center gap-3">
             <button type="submit"
-                    class="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors">
+                    class="bg-primary-500 hover:bg-primary-600 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors">
                 {{ $submitLabel }}
             </button>
             <a href="{{ route('admin.productos.index') }}"
