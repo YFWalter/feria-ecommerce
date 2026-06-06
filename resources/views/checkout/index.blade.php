@@ -19,8 +19,11 @@
           class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         @csrf
 
+        {{-- Columna izquierda: datos + método de pago --}}
+        <div class="lg:col-span-2 space-y-6">
+
         {{-- Datos del cliente --}}
-        <div class="lg:col-span-2 bg-white border border-gray-200 rounded-xl p-5 space-y-4">
+        <div class="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
             <h2 class="font-semibold text-gray-800">Tus datos</h2>
 
             <div>
@@ -59,6 +62,33 @@
                           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">{{ old('notes') }}</textarea>
             </div>
         </div>
+
+        {{-- Método de pago --}}
+        @if(count($paymentMethods))
+            <div class="bg-white border border-gray-200 rounded-xl p-5 space-y-3"
+                 x-data="{ method: '{{ old('payment_method', array_key_first($paymentMethods)) }}' }">
+                <h2 class="font-semibold text-gray-800">Método de pago</h2>
+                @foreach($paymentMethods as $key => $label)
+                    <label class="flex items-start gap-3 border rounded-xl p-3 cursor-pointer transition-colors"
+                           :class="method === '{{ $key }}' ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:border-gray-300'">
+                        <input type="radio" name="payment_method" value="{{ $key }}" x-model="method"
+                               class="mt-1 text-primary-500 focus:ring-primary-400">
+                        <span class="flex-1">
+                            <span class="block font-medium text-gray-900">{{ $label }}</span>
+                            <span class="block text-xs text-gray-500 mt-0.5">
+                                @if($key === 'mercadopago')
+                                    Tarjeta de crédito, débito o dinero en cuenta.
+                                @else
+                                    Te mostramos los datos para transferir; confirmás enviando el comprobante.
+                                @endif
+                            </span>
+                        </span>
+                    </label>
+                @endforeach
+            </div>
+        @endif
+
+        </div>{{-- /columna izquierda --}}
 
         {{-- Resumen --}}
         <div class="bg-white border border-gray-200 rounded-xl p-5 h-fit">

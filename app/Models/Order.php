@@ -10,7 +10,7 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'number', 'status', 'payment_status',
+        'number', 'status', 'payment_status', 'payment_method',
         'subtotal', 'shipping', 'total',
         'customer_name', 'customer_email', 'customer_phone',
         'shipping_address', 'notes',

@@ -6,6 +6,7 @@ use App\Mail\NewOrderMail;
 use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Setting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
@@ -87,6 +88,22 @@ class CheckoutTest extends TestCase
 
         $this->assertDatabaseCount('orders', 0);
         $this->assertEquals(2, $product->fresh()->stock); // sin cambios
+    }
+
+    public function test_permite_pagar_por_transferencia(): void
+    {
+        Mail::fake();
+        Setting::set('transfer_alias', 'mi.alias.mp'); // habilita la opción transferencia
+
+        $product = Product::factory()->create(['stock' => 5, 'price' => 1000]);
+
+        $response = $this->withSession(['cart' => $this->cartFor($product, 1)])
+            ->post(route('checkout.store'), $this->datosCliente() + ['payment_method' => 'transfer']);
+
+        $order = Order::first();
+        $response->assertRedirect(route('checkout.success', $order->number));
+        $this->assertEquals('transfer', $order->payment_method);
+        $this->assertEquals('pending', $order->payment_status);
     }
 
     public function test_redirige_al_carrito_si_esta_vacio(): void

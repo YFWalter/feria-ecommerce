@@ -24,6 +24,11 @@ return [
         'meta_description' => 'Tienda online de artículos de bazar. Calidad a buen precio, directo a tu puerta.',
         'home_categories_limit' => 0,        // 0 = mostrar todas
         'home_categories_style' => 'cards',  // cards | compact
+        'transfer_holder'       => '',       // titular de la cuenta
+        'transfer_bank'         => '',       // banco
+        'transfer_cbu'          => '',       // CBU / CVU
+        'transfer_alias'        => '',       // alias
+        'transfer_instructions' => 'Realizá la transferencia y enviános el comprobante por WhatsApp o email para confirmar tu pedido.',
     ],
 
     /*

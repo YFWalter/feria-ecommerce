@@ -16,7 +16,7 @@
 
     {{-- Pestañas --}}
     <div class="flex flex-wrap gap-1 border-b border-gray-200 mb-6">
-        @foreach(['identidad' => 'Identidad y SEO', 'apariencia' => 'Apariencia', 'inicio' => 'Página de inicio', 'contacto' => 'Contacto'] as $key => $label)
+        @foreach(['identidad' => 'Identidad y SEO', 'apariencia' => 'Apariencia', 'inicio' => 'Página de inicio', 'pagos' => 'Pagos', 'contacto' => 'Contacto'] as $key => $label)
             <button type="button" @click="tab = '{{ $key }}'"
                     :class="tab === '{{ $key }}' ? 'border-primary-500 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
                     class="px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors">
@@ -146,6 +146,62 @@
                             @endforeach
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- ── Pagos ── --}}
+        <div x-show="tab === 'pagos'" class="space-y-6" style="display:none">
+            <div class="bg-white border border-gray-200 rounded-xl p-6 space-y-4">
+                <h2 class="font-semibold text-gray-800">MercadoPago</h2>
+                @if(config('services.mercadopago.access_token'))
+                    <p class="inline-flex items-center gap-2 text-sm text-green-700 bg-green-50 px-3 py-1.5 rounded-lg">
+                        <span class="w-2 h-2 rounded-full bg-green-500"></span> Configurado y activo
+                    </p>
+                @else
+                    <p class="inline-flex items-center gap-2 text-sm text-gray-600 bg-gray-50 px-3 py-1.5 rounded-lg">
+                        <span class="w-2 h-2 rounded-full bg-gray-400"></span> No configurado (cargá MP_ACCESS_TOKEN y MP_PUBLIC_KEY en el .env)
+                    </p>
+                @endif
+            </div>
+
+            <div class="bg-white border border-gray-200 rounded-xl p-6 space-y-5">
+                <div>
+                    <h2 class="font-semibold text-gray-800">Transferencia bancaria</h2>
+                    <p class="text-sm text-gray-500">Cargá tus datos para ofrecer pago por transferencia. Si los dejás vacíos, la opción no aparece en el checkout.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="transfer_holder" class="block text-sm font-medium text-gray-700 mb-1">Titular de la cuenta</label>
+                        <input type="text" name="transfer_holder" id="transfer_holder"
+                               value="{{ old('transfer_holder', setting('transfer_holder')) }}"
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
+                    </div>
+                    <div>
+                        <label for="transfer_bank" class="block text-sm font-medium text-gray-700 mb-1">Banco</label>
+                        <input type="text" name="transfer_bank" id="transfer_bank"
+                               value="{{ old('transfer_bank', setting('transfer_bank')) }}"
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
+                    </div>
+                    <div>
+                        <label for="transfer_cbu" class="block text-sm font-medium text-gray-700 mb-1">CBU / CVU</label>
+                        <input type="text" name="transfer_cbu" id="transfer_cbu"
+                               value="{{ old('transfer_cbu', setting('transfer_cbu')) }}"
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
+                    </div>
+                    <div>
+                        <label for="transfer_alias" class="block text-sm font-medium text-gray-700 mb-1">Alias</label>
+                        <input type="text" name="transfer_alias" id="transfer_alias"
+                               value="{{ old('transfer_alias', setting('transfer_alias')) }}"
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="transfer_instructions" class="block text-sm font-medium text-gray-700 mb-1">Instrucciones para el cliente</label>
+                    <textarea name="transfer_instructions" id="transfer_instructions" rows="2"
+                              class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none">{{ old('transfer_instructions', setting('transfer_instructions')) }}</textarea>
                 </div>
             </div>
         </div>

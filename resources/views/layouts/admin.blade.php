@@ -59,7 +59,7 @@
                     <svg class="w-4 h-4 transition-transform" :class="open && 'rotate-180'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                 </button>
                 <div x-show="open" x-transition class="mt-1 ml-4 pl-3 space-y-0.5 border-l border-gray-700" style="display:none">
-                    @foreach(['identidad' => 'Identidad y SEO', 'apariencia' => 'Apariencia', 'inicio' => 'Página de inicio', 'contacto' => 'Contacto'] as $k => $label)
+                    @foreach(['identidad' => 'Identidad y SEO', 'apariencia' => 'Apariencia', 'inicio' => 'Página de inicio', 'pagos' => 'Pagos', 'contacto' => 'Contacto'] as $k => $label)
                         <a href="{{ route('admin.configuracion.edit', ['tab' => $k]) }}"
                            class="block px-2 py-1.5 rounded text-sm text-gray-400 hover:text-white hover:bg-gray-700 transition-colors">
                             {{ $label }}

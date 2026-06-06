@@ -34,7 +34,24 @@ class CheckoutController extends Controller
         $shipping = self::SHIPPING_COST;
         $total    = $subtotal + $shipping;
 
-        return view('checkout.index', compact('cart', 'subtotal', 'shipping', 'total'));
+        $paymentMethods = $this->availablePaymentMethods();
+
+        return view('checkout.index', compact('cart', 'subtotal', 'shipping', 'total', 'paymentMethods'));
+    }
+
+    /** Métodos de pago disponibles según la configuración. */
+    private function availablePaymentMethods(): array
+    {
+        $methods = [];
+
+        if (config('services.mercadopago.access_token')) {
+            $methods['mercadopago'] = 'MercadoPago';
+        }
+        if (setting('transfer_alias') || setting('transfer_cbu')) {
+            $methods['transfer'] = 'Transferencia bancaria';
+        }
+
+        return $methods;
     }
 
     public function store(Request $request)
@@ -52,14 +69,19 @@ class CheckoutController extends Controller
             'customer_phone'   => 'nullable|string|max:50',
             'shipping_address' => 'required|string|max:1000',
             'notes'            => 'nullable|string|max:1000',
+            'payment_method'   => 'nullable|in:mercadopago,transfer',
         ]);
+
+        // Método de pago elegido (solo si está disponible). Si no, queda null (a coordinar).
+        $methods = $this->availablePaymentMethods();
+        $method  = isset($methods[$data['payment_method'] ?? '']) ? $data['payment_method'] : array_key_first($methods);
 
         $subtotal = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
         $shipping = self::SHIPPING_COST;
         $total    = $subtotal + $shipping;
 
         try {
-            $order = DB::transaction(function () use ($cart, $data, $subtotal, $shipping, $total) {
+            $order = DB::transaction(function () use ($cart, $data, $method, $subtotal, $shipping, $total) {
                 // Bloqueamos y verificamos el stock de cada producto antes de confirmar.
                 foreach ($cart as $item) {
                     $product = Product::lockForUpdate()->find($item['product_id']);
@@ -84,6 +106,7 @@ class CheckoutController extends Controller
                     'customer_phone'   => $data['customer_phone'] ?? null,
                     'shipping_address' => $data['shipping_address'],
                     'notes'            => $data['notes'] ?? null,
+                    'payment_method'   => $method,
                     'stock_reduced'    => true,
                 ]);
 
@@ -106,8 +129,8 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', $e->getMessage());
         }
 
-        // Si MercadoPago está configurado, redirigimos a la pasarela de pago.
-        if (config('services.mercadopago.access_token')) {
+        // MercadoPago: redirigimos a la pasarela de pago.
+        if ($method === 'mercadopago' && config('services.mercadopago.access_token')) {
             try {
                 $initPoint = $this->createMercadoPagoPreference($order);
                 // El pedido ya está creado: vaciamos el carrito antes de ir a pagar.
@@ -120,7 +143,7 @@ class CheckoutController extends Controller
             }
         }
 
-        // Sin MercadoPago (o si falló): confirmamos el pedido con pago pendiente.
+        // Transferencia (o sin pasarela): confirmamos el pedido con pago pendiente.
         session()->forget('cart');
         $this->sendOrderEmails($order);
 

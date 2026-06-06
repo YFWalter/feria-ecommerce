@@ -16,6 +16,7 @@ class SettingController extends Controller
         'footer_tagline', 'footer_email', 'footer_phone',
         'whatsapp_number', 'whatsapp_message',
         'home_categories_limit', 'home_categories_style',
+        'transfer_holder', 'transfer_bank', 'transfer_cbu', 'transfer_alias', 'transfer_instructions',
     ];
 
     public function edit()
@@ -42,6 +43,11 @@ class SettingController extends Controller
             'meta_description' => 'nullable|string|max:300',
             'home_categories_limit' => 'nullable|integer|min:0|max:50',
             'home_categories_style' => 'required|in:cards,compact',
+            'transfer_holder'       => 'nullable|string|max:150',
+            'transfer_bank'         => 'nullable|string|max:100',
+            'transfer_cbu'          => 'nullable|string|max:50',
+            'transfer_alias'        => 'nullable|string|max:100',
+            'transfer_instructions' => 'nullable|string|max:500',
             'logo'           => 'nullable|image|max:1024',
         ]);
 
