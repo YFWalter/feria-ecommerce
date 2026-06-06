@@ -20,6 +20,9 @@ class ShopController extends Controller
 
         $categories = $categoriesQuery->get();
 
+        // ¿Hay más categorías activas de las que se muestran? (para el enlace "Ver todas")
+        $totalCategories = Category::where('is_active', true)->count();
+
         $featured   = Product::with('category')
             ->where('is_active', true)
             ->where('featured', true)
@@ -27,7 +30,7 @@ class ShopController extends Controller
             ->take(8)
             ->get();
 
-        return view('shop.home', compact('categories', 'featured'));
+        return view('shop.home', compact('categories', 'featured', 'totalCategories'));
     }
 
     public function index(Request $request)

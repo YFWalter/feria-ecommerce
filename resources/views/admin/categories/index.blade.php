@@ -35,6 +35,7 @@
                     <th class="px-5 py-3 font-medium">Productos</th>
                     <th class="px-5 py-3 font-medium">Orden</th>
                     <th class="px-5 py-3 font-medium">Estado</th>
+                    <th class="px-5 py-3 font-medium">En inicio</th>
                     <th class="px-5 py-3 font-medium text-right">Acciones</th>
                 </tr>
             </thead>
@@ -63,13 +64,25 @@
                                 <span class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-500">Inactiva</span>
                             @endif
                         </td>
+                        <td class="px-5 py-3">
+                            <form action="{{ route('admin.categorias.toggle-home', $category) }}" method="POST">
+                                @csrf
+                                <button type="submit"
+                                        class="text-xs font-medium px-2.5 py-1 rounded-full transition-colors {{ $category->show_on_home ? 'bg-primary-100 text-primary-700 hover:bg-primary-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' }}"
+                                        title="Clic para {{ $category->show_on_home ? 'quitar del' : 'mostrar en el' }} inicio">
+                                    {{ $category->show_on_home ? '✓ Sí' : '— No' }}
+                                </button>
+                            </form>
+                        </td>
                         <td class="px-5 py-3 text-right whitespace-nowrap">
                             <a href="{{ route('admin.categorias.edit', $category) }}"
                                class="text-primary-600 hover:text-primary-700 mr-3">Editar</a>
-                            <form action="{{ route('admin.categorias.destroy', $category) }}" method="POST" class="inline"
-                                  onsubmit="return confirm('¿Eliminar la categoría &quot;{{ $category->name }}&quot;?')">
+                            <form action="{{ route('admin.categorias.destroy', $category) }}" method="POST" class="inline">
                                 @csrf @method('DELETE')
-                                <button class="text-red-500 hover:text-red-600">Eliminar</button>
+                                <button type="button" class="text-red-500 hover:text-red-600"
+                                        @click="$dispatch('confirm-action', { message: 'Vas a eliminar la categoría &quot;{{ $category->name }}&quot;.', target: $el.closest('form') })">
+                                    Eliminar
+                                </button>
                             </form>
                         </td>
                     </tr>

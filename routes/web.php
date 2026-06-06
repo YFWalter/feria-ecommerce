@@ -49,6 +49,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('categorias', CategoryController::class)
         ->parameters(['categorias' => 'category'])
         ->except(['show']);
+    Route::post('/categorias/{category}/toggle-home', [CategoryController::class, 'toggleHome'])
+        ->name('categorias.toggle-home');
     Route::resource('pedidos', OrderController::class)
         ->parameters(['pedidos' => 'order'])
         ->only(['index', 'show', 'update']);

@@ -72,10 +72,12 @@
                         <td class="px-5 py-3 text-right whitespace-nowrap">
                             <a href="{{ route('admin.productos.edit', $product) }}"
                                class="text-primary-600 hover:text-primary-700 mr-3">Editar</a>
-                            <form action="{{ route('admin.productos.destroy', $product) }}" method="POST" class="inline"
-                                  onsubmit="return confirm('¿Eliminar &quot;{{ $product->name }}&quot;?')">
+                            <form action="{{ route('admin.productos.destroy', $product) }}" method="POST" class="inline">
                                 @csrf @method('DELETE')
-                                <button class="text-red-500 hover:text-red-600">Eliminar</button>
+                                <button type="button" class="text-red-500 hover:text-red-600"
+                                        @click="$dispatch('confirm-action', { message: 'Vas a eliminar el producto &quot;{{ $product->name }}&quot;. Esta acción no se puede deshacer.', target: $el.closest('form') })">
+                                    Eliminar
+                                </button>
                             </form>
                         </td>
                     </tr>

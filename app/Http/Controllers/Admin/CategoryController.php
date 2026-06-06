@@ -91,6 +91,16 @@ class CategoryController extends Controller
             ->with('success', 'Categoría eliminada.');
     }
 
+    /** Activa/desactiva la visibilidad de la categoría en la página de inicio. */
+    public function toggleHome(Category $category)
+    {
+        $category->update(['show_on_home' => ! $category->show_on_home]);
+
+        return back()->with('success', $category->show_on_home
+            ? "“{$category->name}” ahora se muestra en el inicio."
+            : "“{$category->name}” se quitó del inicio.");
+    }
+
     private function validateData(Request $request): array
     {
         return $request->validate([

@@ -23,7 +23,12 @@
 {{-- Categorías --}}
 @if($categories->count())
 <section class="max-w-6xl mx-auto px-4 py-12">
-    <h2 class="text-xl font-bold text-gray-900 mb-6">Categorías</h2>
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-bold text-gray-900">Categorías</h2>
+        @if($categories->count() < $totalCategories)
+            <a href="{{ route('products.index') }}" class="text-sm text-primary-600 hover:underline">Ver todas →</a>
+        @endif
+    </div>
 
     @if(setting('home_categories_style') === 'compact')
         {{-- Estilo compacto: chips --}}
