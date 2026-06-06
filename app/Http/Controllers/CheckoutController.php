@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\MercadoPagoConfig;
+use MercadoPago\Net\MPSearchRequest;
 
 class CheckoutController extends Controller
 {
@@ -201,14 +202,73 @@ class CheckoutController extends Controller
         $order->loadMissing('items');
 
         try {
-            Mail::to($order->customer_email)->send(new OrderConfirmationMail($order));
+            // Encolamos (no bloquean el checkout). El email al admin va con un
+            // pequeño retraso para no superar el límite por segundo de Mailtrap.
+            Mail::to($order->customer_email)->queue(new OrderConfirmationMail($order));
 
             if ($adminEmail = config('services.store.admin_email')) {
-                Mail::to($adminEmail)->send(new NewOrderMail($order));
+                Mail::to($adminEmail)->later(now()->addSeconds(10), new NewOrderMail($order));
             }
         } catch (\Throwable $e) {
-            Log::error("Error enviando emails del pedido {$order->number}: " . $e->getMessage());
+            Log::error("Error encolando emails del pedido {$order->number}: " . $e->getMessage());
         }
+    }
+
+    /**
+     * Acción del admin: busca el pago en MercadoPago por número de pedido
+     * (external_reference) y actualiza el estado. Útil cuando el cliente no
+     * volvió al sitio o el webhook no llegó (ej. desarrollo en localhost).
+     */
+    public function verifyPayment(Order $order)
+    {
+        if (! config('services.mercadopago.access_token')) {
+            return back()->with('error', 'MercadoPago no está configurado.');
+        }
+
+        try {
+            $found = $this->syncOrderByReference($order->number);
+        } catch (\Throwable $e) {
+            Log::error("MercadoPago verify error ({$order->number}): " . $e->getMessage());
+
+            return back()->with('error', 'Hubo un error al consultar MercadoPago.');
+        }
+
+        return $found
+            ? back()->with('success', 'Pago verificado con MercadoPago. El estado del pedido se actualizó.')
+            : back()->with('error', 'No se encontró ningún pago en MercadoPago para este pedido.');
+    }
+
+    /**
+     * Busca en MP los pagos de un pedido (por external_reference) y aplica el
+     * estado. Prioriza un pago aprobado si existe. Devuelve true si encontró pago.
+     */
+    private function syncOrderByReference(string $orderNumber): bool
+    {
+        MercadoPagoConfig::setAccessToken(config('services.mercadopago.access_token'));
+
+        $result   = (new PaymentClient())->search(new MPSearchRequest(20, 0, ['external_reference' => $orderNumber]));
+        $payments = $result->results ?? [];
+
+        if (empty($payments)) {
+            return false;
+        }
+
+        // Elegimos un pago aprobado si lo hay; si no, el primero.
+        $chosen = $payments[0];
+        foreach ($payments as $payment) {
+            if (($payment->status ?? null) === 'approved') {
+                $chosen = $payment;
+                break;
+            }
+        }
+
+        $order = Order::where('number', $orderNumber)->first();
+
+        if ($order) {
+            $this->applyPaymentStatus($order, $chosen->status ?? null, (string) ($chosen->id ?? ''));
+        }
+
+        return true;
     }
 
     /**

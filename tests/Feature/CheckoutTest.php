@@ -71,8 +71,8 @@ class CheckoutTest extends TestCase
         $this->withSession(['cart' => $this->cartFor($product, 1)])
             ->post(route('checkout.store'), $this->datosCliente());
 
-        Mail::assertSent(OrderConfirmationMail::class);
-        Mail::assertSent(NewOrderMail::class);
+        Mail::assertQueued(OrderConfirmationMail::class);
+        Mail::assertQueued(NewOrderMail::class);
     }
 
     public function test_rechaza_el_checkout_si_no_hay_stock_suficiente(): void

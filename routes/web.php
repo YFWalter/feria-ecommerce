@@ -53,6 +53,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         ->parameters(['pedidos' => 'order'])
         ->only(['index', 'show', 'update']);
 
+    Route::post('/pedidos/{order}/verificar-pago', [CheckoutController::class, 'verifyPayment'])
+        ->name('pedidos.verify-payment');
+
     Route::get('/configuracion', [SettingController::class, 'edit'])->name('configuracion.edit');
     Route::put('/configuracion', [SettingController::class, 'update'])->name('configuracion.update');
 });

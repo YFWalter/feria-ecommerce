@@ -106,6 +106,16 @@
                 @if($order->mp_preference_id)
                     <p class="break-all"><span class="font-medium text-gray-700">Preference:</span> {{ $order->mp_preference_id }}</p>
                 @endif
+
+                @if(config('services.mercadopago.access_token'))
+                    <form action="{{ route('admin.pedidos.verify-payment', $order) }}" method="POST" class="pt-3">
+                        @csrf
+                        <button class="w-full bg-gray-800 hover:bg-gray-900 text-white text-sm font-medium py-2 rounded-lg transition-colors">
+                            Verificar pago en MercadoPago
+                        </button>
+                        <p class="text-xs text-gray-400 mt-1.5">Consulta el estado real del pago en MercadoPago y actualiza el pedido.</p>
+                    </form>
+                @endif
             </div>
         @endif
     </div>
